@@ -1,117 +1,201 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
       fixed
       app
+      temporary
+      dark
+      color="rgba(0, 0, 0, 0.6)"
     >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
+      <LazyNavDrawer
+        :socialLinks="socialLinks"
+        :navLinks="navLinks"
+        :serviceLinks="serviceLinks"
+        :portfolioLinks="portfolioLinks"
+      />
+    </v-navigation-drawer>
+    <v-app-bar id="nav" fixed app flat class="nav-transparent">
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+        aria-label="nav-button"
+      >
+        <v-icon slot="default" color="primary">{{
+          icons.menu
+        }}</v-icon></v-app-bar-nav-icon
+      >
+      <nuxt-link :to="{ name: 'index' }" alt="Home Page">
+        <v-img
+          src="icon.png"
+          alt="Logo"
+          :max-width="$vuetify.breakpoint.lgAndUp ? 55 : 45"
+      /></nuxt-link>
+
+      <v-row
+        no-gutters
+        justify="center"
+        align="center"
+        v-if="!$vuetify.breakpoint.mdAndDown"
+      >
+        <v-btn
+          v-for="item in navLinks"
+          :key="item.title"
+          color="secondary"
+          class="mx-2"
           router
           exact
+          :to="item.to"
+          ><strong>{{ item.title }}</strong></v-btn
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      </v-row>
       <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
+        color="secondary"
+        class="ml-auto font-weight-bold"
+        rounded
+        href="tel:+917980665957"
+        target="_blank"
+        ><v-icon left>{{ icons.call }}</v-icon> Call</v-btn
       >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <nuxt />
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
+    <v-btn
+      fab
       fixed
+      bottom
+      right
+      color="secondary"
+      href="https://wa.me/message/M3D4MSM2TZNSJ1"
+      target="_blank"
+      rel="noreferrer"
+      alt="whatsapp"
+      aria-label="whatsapp button"
     >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
+      <v-icon x-large>{{ icons.whatsapp }} </v-icon>
+    </v-btn>
+    <LazyFooter
+      :socialLinks="socialLinks"
+      :icons="icons"
+      :serviceLinks="serviceLinks"
+      :portfolioLinks="portfolioLinks"
+    />
+    <v-footer app absolute>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import {
+  mdiMenu,
+  mdiPhone,
+  mdiWhatsapp,
+  mdiEmail,
+  mdiFacebook,
+  mdiInstagram,
+  mdiYoutube,
+  mdiGoogle,
+  mdiPinterest,
+} from '@mdi/js'
+
 export default {
-  data () {
+  data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
-      items: [
+      icons: {
+        menu: mdiMenu,
+        call: mdiPhone,
+        email: mdiEmail,
+        whatsapp: mdiWhatsapp,
+      },
+
+      navLinks: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
+          title: 'Home',
+          to: '/',
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
+          title: 'About US',
+          to: '/#about-us',
+        },
+        {
+          title: 'Services',
+          to: '/#services',
+        },
+
+        {
+          title: 'Portfolio',
+          to: '/portfolio',
+        },
+
+        {
+          title: 'Contact US',
+          to: '/contact',
+        },
       ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+      socialLinks: [
+        {
+          name: 'Facebook',
+          url: 'https://www.facebook.com/signetlogo',
+          icon: mdiFacebook,
+        },
+        {
+          name: 'Instagram',
+          url: 'https://www.instagram.com/signetlogo',
+          icon: mdiInstagram,
+        },
+        {
+          name: 'Youtube',
+          url: 'https://www.youtube.com/channel/UCTHNYidV3Jv-tRoEB_iUmTQ',
+          icon: mdiYoutube,
+        },
+        { name: 'Google', url: 'https://g.co/kgs/jbFUBk', icon: mdiGoogle },
+        {
+          name: 'Pinterest',
+          url: 'https://www.pinterest.ca/signetlogo',
+          icon: mdiPinterest,
+        },
+      ],
+      serviceLinks: [
+        { name: 'Fiverr', url: 'https://www.fiverr.com/signetlogo' },
+        {
+          name: 'Upwork',
+          url: 'https://www.upwork.com/freelancers/~01340b635722d78678',
+        },
+        { name: 'Freelancer', url: 'https://www.freelancer.com/u/signetlogo' },
+      ],
+      portfolioLinks: [
+        {
+          name: 'Behance',
+          url: 'https://www.behance.net/signetlogo',
+          icon: require('@/assets/icons/behance.svg'),
+        },
+        {
+          name: 'Dribbble',
+          url: 'https://dribbble.com/signetlogo',
+          icon: require('@/assets/icons/dribbble.svg'),
+        },
+      ],
     }
-  }
+  },
+  mounted() {
+    let myNav = document.getElementById('nav')
+    window.onscroll = function () {
+      'use strict'
+      if (document.body.scrollTop >= 200) {
+        myNav.classList.add('nav-transparent')
+      } else {
+        myNav.classList.remove('nav-transparent')
+      }
+    }
+    // this.tawk()
+  },
 }
 </script>
+<style scoped>
+.nav-transparent {
+  transition: opacity 0.5s ease-in-out;
+  background-color: transparent !important;
+}
+</style>
